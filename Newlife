@@ -1,7 +1,258 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background: linear-gradient(to bottom, #1f2937, #000000);
-  color: white;
+{
+  "name": "new-life-app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "framer-motion": "^10.12.16",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
+const numerosBiblicos = [3, 7, 12, 13, 33, 40, 66, 70, 144, 153, 318, 666];
+const eventos = [
+  "Reencuentro con un recuerdo transformador",
+  "Una señal inesperada cambiará tu atención",
+  "Sentirás una fuerza para decidir algo importante",
+  "Hablarás con alguien que podría marcar tu camino",
+  "Tendrás la oportunidad de ayudar a alguien",
+  "Evita un conflicto que no te pertenece",
+  "Algo perdido puede reaparecer",
+  "Tu intuición será clave en una elección",
+  "Un número o símbolo se repetirá: no lo ignores",
+  "Una noticia inesperada sacudirá tu día",
+];
+
+const preguntas = [
+  "How do you feel emotionally today?",
+  "Do you usually see the positive side of things?",
+  "Do you consider yourself grateful?",
+  "Do you have clear goals right now?",
+  "Are you surrounded by people who uplift you?",
+  "Do you feel in control of your life?",
+  "Do you forgive easily?",
+  "Do you feel you receive what you give?",
+  "Do you enjoy your daily life?",
+  "Do you often have positive thoughts?",
+  "Do you take time for yourself?",
+  "Are you at peace with your past?",
+  "Do you feel excited about your future?",
+  "Do you act with kindness without expecting rewards?",
+  "Do you accept change or resist it?",
+  "Do you feel connected to something greater?",
+  "Do you have faith that good things will come?",
+  "Are you consistent with positive habits?",
+  "Do you know when to rest?",
+  "Do you feel love (for yourself or others)?",
+];
+
+const preguntasProfundas = [
+  "What pain or fear are you hiding that you haven't faced?",
+  "What part of yourself do you want to change but haven't dared?",
+  "What's your biggest unspoken desire?",
+  "What would you repeat from your past, and what would you change?",
+  "Who would you be without the fear of others' judgment?",
+];
+
+function analizarRespuestas(respuestas) {
+  const positivas = respuestas.filter((r) => r >= 4).length;
+  return positivas / respuestas.length;
+}
+
+function generarResultado(pesoPositivo) {
+  const numero =
+    numerosBiblicos[Math.floor(Math.random() * numerosBiblicos.length)];
+  const eventoIndex =
+    pesoPositivo > 0.6
+      ? Math.floor(Math.random() * (eventos.length / 2))
+      : Math.floor(Math.random() * eventos.length);
+  const evento = eventos[eventoIndex];
+  const probabilidad = Math.floor(Math.random() * 100) + 1;
+  const ahora = new Date();
+  const hora = ahora.getHours();
+  const minuto = ahora.getMinutes();
+  const duracion = Math.floor(Math.random() * 180) + 15;
+  return {
+    numeroBiblico: numero,
+    evento,
+    probabilidad: probabilidad + "%",
+    fecha: ahora.toLocaleDateString(),
+    hora: `${hora.toString().padStart(2, "0")}:${minuto
+      .toString()
+      .padStart(2, "0")}`,
+    duracion: `${duracion} minutes`,
+  };
+}
+
+export default function App() {
+  const [fase, setFase] = useState("preguntas");
+  const [respuestas, setRespuestas] = useState(Array(preguntas.length).fill(3));
+  const [respuestasProfundas, setRespuestasProfundas] = useState(
+    Array(preguntasProfundas.length).fill("")
+  );
+  const [peso, setPeso] = useState(0.5);
+  const [usarProfundas, setUsarProfundas] = useState(false);
+  const [tiradas, setTiradas] = useState([]);
+  const [mostrarIndice, setMostrarIndice] = useState(0);
+  const [girando, setGirando] = useState(false);
+
+  useEffect(() => {
+    if (fase === "ruleta") generarTiradas();
+  }, [fase]);
+
+  const actualizarRespuesta = (index, valor) => {
+    const nuevas = [...respuestas];
+    nuevas[index] = valor;
+    setRespuestas(nuevas);
+  };
+
+  const actualizarProfunda = (index, texto) => {
+    const nuevas = [...respuestasProfundas];
+    nuevas[index] = texto;
+    setRespuestasProfundas(nuevas);
+  };
+
+  const procesarPerfil = () => {
+    const balance = analizarRespuestas(respuestas);
+    setPeso(balance);
+    if (balance < 0.4) {
+      setUsarProfundas(true);
+    } else {
+      setFase("ruleta");
+    }
+  };
+
+  const finalizarProfundas = () => {
+    setFase("ruleta");
+  };
+
+  const generarTiradas = () => {
+    const nuevasTiradas = Array.from({ length: 20 }, () =>
+      generarResultado(peso)
+    );
+    setTiradas(nuevasTiradas);
+  };
+
+  const siguienteTirada = () => {
+    setGirando(true);
+    setTimeout(() => {
+      setMostrarIndice((prev) => (prev + 1 < tiradas.length ? prev + 1 : 0));
+      setGirando(false);
+    }, 1500);
+  };
+
+  if (fase === "preguntas") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-800 to-black text-white p-6">
+        <h1 className="text-2xl font-bold mb-4">New Life - Energy Profile</h1>
+        <p className="mb-4">Answer honestly from 1 (not at all) to 5 (very much)</p>
+        <div className="space-y-4">
+          {preguntas.map((pregunta, i) => (
+            <div key={i} className="flex flex-col">
+              <label className="mb-1">{pregunta}</label>
+              <input
+                type="range"
+                min={1}
+                max={5}
+                value={respuestas[i]}
+                onChange={(e) => actualizarRespuesta(i, parseInt(e.target.value))}
+              />
+              <span className="text-sm text-gray-300">Value: {respuestas[i]}</span>
+            </div>
+          ))}
+        </div>
+        <button
+          className="mt-6 px-6 py-2 bg-yellow-400 text-black rounded-xl font-bold hover:bg-yellow-300"
+          onClick={procesarPerfil}
+        >
+          Continue
+        </button>
+      </div>
+    );
+  }
+
+  if (usarProfundas && fase !== "ruleta") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-6">
+        <h2 className="text-xl font-semibold mb-4">Deeper Questions</h2>
+        <p className="mb-4">Answer with honesty from within</p>
+        <div className="space-y-4">
+          {preguntasProfundas.map((pregunta, i) => (
+            <div key={i} className="flex flex-col">
+              <label className="mb-1">{pregunta}</label>
+              <textarea
+                className="bg-gray-700 text-white p-2 rounded"
+                rows={2}
+                value={respuestasProfundas[i]}
+                onChange={(e) => actualizarProfunda(i, e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+        <button
+          className="mt-6 px-6 py-2 bg-yellow-400 text-black rounded-xl font-bold hover:bg-yellow-300"
+          onClick={finalizarProfundas}
+        >
+          Finalize and view your day
+        </button>
+      </div>
+    );
+  }
+
+  const actual = tiradas[mostrarIndice];
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-gray-900 to-black text-white">
+      <motion.div
+        animate={{ rotate: girando ? 360 * 2 : 0 }}
+        transition={{ duration: 1.5, ease: "easeInOut" }}
+        className="w-40 h-40 rounded-full border-4 border-yellow-400 flex items-center justify-center text-xl font-bold bg-gray-800 shadow-2xl"
+      >
+        {girando ? "..." : actual?.numeroBiblico || "🎰"}
+      </motion.div>
+
+      {actual && (
+        <div className="mt-6 w-full max-w-md bg-white text-black p-4 rounded shadow-lg space-y-2">
+          <p>
+            <strong>Biblical number:</strong> {actual.numeroBiblico}
+          </p>
+          <p>
+            <strong>Event:</strong> {actual.evento}
+          </p>
+          <p>
+            <strong>Probability:</strong> {actual.probabilidad}
+          </p>
+          <p>
+            <strong>Date:</strong> {actual.fecha}
+          </p>
+          <p>
+            <strong>Time:</strong> {actual.hora}
+          </p>
+          <p>
+            <strong>Duration:</strong> {actual.duracion}
+          </p>
+          <p className="text-xs text-gray-500">
+            Tirada {mostrarIndice + 1} de 20
+          </p>
+        </div>
+      )}
+
+      <button
+        onClick={siguienteTirada}
+        disabled={girando}
+        className="mt-6 px-6 py-2 bg-yellow-400 text-black rounded-2xl font-bold shadow-lg hover:bg-yellow-300 disabled:opacity-50"
+      >
+        Next Prediction
+      </button>
+    </div>
+  );
 }
