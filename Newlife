@@ -312,3 +312,25 @@ body {
   background: linear-gradient(to bottom, #1f2937, #000000);
   color: white;
 }
+
+
+
+
+
+
+// NewLifeApp.jsx (archivo principal del componente) import React, { useState, useEffect } from 'react';
+
+const EVENT_CATEGORIES = { miraculous: [ "Soñar algo que se cumple", "Tener un presentimiento que resulta real", "Ver el número 777 repetido", ], everyday: [ "Tropezarte sin caerte", "Ver aterrizar un avión", "Que te pique una abeja", "Encontrar un cachorro", "Subirte a una escalera", ], negative: [ "Olvidar una cita importante", "Discutir con un familiar", "Perder algo valioso", ], positive: [ "Encontrarte un billete en la calle", "Un desconocido te sonríe", "Oler algo que te recuerda a la infancia", "Escuchar tu canción favorita de la nada", ], dangerous: [ "No comer en todo el día", "Accidente leve de moto", "Caerte por unas escaleras", "Ser mordido por un perro", ], symbolic: [ "Ver un cuervo tres veces", "Sentir que alguien te observa", "Ser seguido por un gato", ] };
+
+function getWeightedEvents(userProfile) { const events = []; const { countryTier, emotionScore } = userProfile;
+
+const weights = { miraculous: 1, everyday: 10, positive: emotionScore > 0.5 ? 15 : 5, negative: emotionScore < 0.4 ?
+
+
+
+
+
+
+
+
+
