@@ -312,3 +312,6 @@ body {
   background: linear-gradient(to bottom, #1f2937, #000000);
   color: white;
 }
+
+
+npm i @vercel/speed-insights
