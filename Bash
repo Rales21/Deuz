@@ -1,0 +1,3 @@
+git add .
+git commit -m "Initial commit New Life app"
+git push origin main
