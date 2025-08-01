@@ -15,6 +15,10 @@
     "eject": "react-scripts eject"
   }
 }
+
+
+
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -31,6 +35,11 @@ const eventos = [
   "Un número o símbolo se repetirá: no lo ignores",
   "Una noticia inesperada sacudirá tu día",
 ];
+
+
+
+
+
 
 const preguntas = [
   "How do you feel emotionally today?",
@@ -55,6 +64,11 @@ const preguntas = [
   "Do you feel love (for yourself or others)?",
 ];
 
+
+
+
+
+
 const preguntasProfundas = [
   "What pain or fear are you hiding that you haven't faced?",
   "What part of yourself do you want to change but haven't dared?",
@@ -63,10 +77,20 @@ const preguntasProfundas = [
   "Who would you be without the fear of others' judgment?",
 ];
 
+
+
+
+
+
 function analizarRespuestas(respuestas) {
   const positivas = respuestas.filter((r) => r >= 4).length;
   return positivas / respuestas.length;
 }
+
+
+
+
+
 
 function generarResultado(pesoPositivo) {
   const numero =
@@ -92,6 +116,12 @@ function generarResultado(pesoPositivo) {
     duracion: `${duracion} minutes`,
   };
 }
+
+
+
+
+
+
 
 export default function App() {
   const [fase, setFase] = useState("preguntas");
